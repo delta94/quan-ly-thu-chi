@@ -3,6 +3,7 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import HomeTabs from './HomeTabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import SettingScreen from '../screens/tabs/SettingScreen';
+import ReportScreen from '../screens/tabs/ReportScreen';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -21,7 +22,7 @@ const MainTabs = () => {
       />
       <Tab.Screen
         name="ReportTab"
-        component={HomeTabs}
+        component={ReportScreen}
         options={{
           tabBarLabel: 'Báo cáo',
           tabBarIcon: ({ color }) => (
@@ -33,7 +34,7 @@ const MainTabs = () => {
         name="SettingsTab"
         component={SettingScreen}
         options={{
-          tabBarLabel: 'Báo cáo',
+          tabBarLabel: 'Cài đặt',
           tabBarIcon: ({ color }) => (
             <Icon name="bars" color={color} size={26} />
           ),

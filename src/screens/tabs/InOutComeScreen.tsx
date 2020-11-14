@@ -1,5 +1,12 @@
 import React, { useCallback, useState } from 'react';
-import { StyleSheet, Pressable, ScrollView, View, Alert } from 'react-native';
+import {
+  StyleSheet,
+  Pressable,
+  ScrollView,
+  View,
+  Alert,
+  StatusBar,
+} from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { Text, TextInput, Button } from 'react-native-paper';
 import { FlatGrid } from 'react-native-super-grid';
@@ -8,6 +15,7 @@ import FastImage from 'react-native-fast-image';
 import { saveOutComing } from '../../services/outComming';
 import inComeCategories from '../../configs/inComeCategories';
 import { saveInComing } from '../../services/inComming';
+import { formatCurrency, removeComas } from '../../commons/format';
 
 const InOutComeScreen = (props: any) => {
   const [description, setDescription] = useState<string>('');
@@ -15,6 +23,9 @@ const InOutComeScreen = (props: any) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedCategory, setSelectedCategory] = useState<number>(-1);
   const theme = useTheme();
+  const onChangeTotal = useCallback((value: string) => {
+    setTotal((parseInt(removeComas(value), 10) || 0).toString());
+  }, []);
   const onPressSave = useCallback(async () => {
     if (selectedCategory === -1) {
       return Alert.alert('Lẩu rầu', 'Vui lòng chọn danh mục');
@@ -40,79 +51,88 @@ const InOutComeScreen = (props: any) => {
     }
   }, [selectedCategory, total, description, props.route.name]);
   return (
-    <ScrollView
-      keyboardShouldPersistTaps="always"
-      keyboardDismissMode="interactive"
-      style={styles.container}>
-      <TextInput
-        placeholder="Ghi chú"
-        label="Ghi chú"
-        mode="outlined"
-        style={styles.input}
-        theme={theme}
-        value={description}
-        onChangeText={setDescription}
+    <View style={styles.container}>
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor={theme.colors.primary}
       />
-      <TextInput
-        placeholder="Số tiền"
-        label="Số tiền"
-        mode="outlined"
-        style={styles.inputTotal}
-        theme={theme}
-        value={total}
-        onChangeText={setTotal}
-        keyboardType="numeric"
-      />
-      <Text style={styles.categoryTitle} theme={theme}>
-        Danh mục
-      </Text>
-      <View>
-        <FlatGrid
-          data={
-            props.route.name === 'OutComeScreen'
-              ? outComeCategories
-              : inComeCategories
-          }
-          scrollEnabled={false}
-          renderItem={({ item, index }) => {
-            return (
-              <Pressable onPress={() => setSelectedCategory(index)}>
-                <View
-                  style={[
-                    styles.categoryContainer,
-                    {
-                      borderColor: theme.colors.primary,
-                      backgroundColor:
-                        index === selectedCategory
-                          ? theme.colors.primary + '30'
-                          : theme.colors.background,
-                    },
-                  ]}>
-                  <FastImage source={item.icon} style={styles.icon} />
-                  <Text theme={theme}>{item.name}</Text>
-                </View>
-              </Pressable>
-            );
-          }}
+      <ScrollView
+        keyboardShouldPersistTaps="always"
+        keyboardDismissMode="interactive"
+        style={styles.scrollView}>
+        <TextInput
+          placeholder="Ghi chú"
+          label="Ghi chú"
+          mode="outlined"
+          style={styles.input}
+          theme={theme}
+          value={description}
+          onChangeText={setDescription}
         />
-      </View>
-      <Button
-        icon="plus"
-        mode="contained"
-        style={styles.button}
-        disabled={isLoading}
-        loading={isLoading}
-        onPress={onPressSave}>
-        Nhập khoản {props.route.name === 'OutComeScreen' ? 'Chi' : 'Thu'}
-      </Button>
-    </ScrollView>
+        <TextInput
+          placeholder="Số tiền"
+          label="Số tiền"
+          mode="outlined"
+          style={styles.inputTotal}
+          theme={theme}
+          value={formatCurrency(total)}
+          onChangeText={onChangeTotal}
+          keyboardType="numeric"
+        />
+        <Text style={styles.categoryTitle} theme={theme}>
+          Danh mục
+        </Text>
+        <View>
+          <FlatGrid
+            data={
+              props.route.name === 'OutComeScreen'
+                ? outComeCategories
+                : inComeCategories
+            }
+            scrollEnabled={false}
+            renderItem={({ item, index }) => {
+              return (
+                <Pressable onPress={() => setSelectedCategory(index)}>
+                  <View
+                    style={[
+                      styles.categoryContainer,
+                      {
+                        borderColor: theme.colors.primary,
+                        backgroundColor:
+                          index === selectedCategory
+                            ? theme.colors.primary + '30'
+                            : theme.colors.background,
+                      },
+                    ]}>
+                    <FastImage source={item.icon} style={styles.icon} />
+                    <Text theme={theme}>{item.name}</Text>
+                  </View>
+                </Pressable>
+              );
+            }}
+          />
+        </View>
+        <Button
+          icon="plus"
+          mode="contained"
+          style={styles.button}
+          disabled={isLoading}
+          loading={isLoading}
+          onPress={onPressSave}>
+          Nhập khoản {props.route.name === 'OutComeScreen' ? 'Chi' : 'Thu'}
+        </Button>
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 10,
     flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+    paddingVertical: 10,
   },
   input: {
     marginHorizontal: 10,

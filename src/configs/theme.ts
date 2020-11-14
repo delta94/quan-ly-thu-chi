@@ -7,6 +7,8 @@ const lightTheme = {
     primary: '#7e3ff2',
     border: '#7e3ff2',
     placeholder: '#7e3ff2',
+    background: '#eee',
+    itemBackground: '#ffffff',
   },
 };
 

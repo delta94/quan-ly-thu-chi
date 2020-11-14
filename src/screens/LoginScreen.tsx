@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import {View, StyleSheet, StatusBar} from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { onGoogleButtonPress } from '../services/auth';
@@ -9,6 +9,7 @@ const LoginScreen = () => {
   return (
     <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <StatusBar barStyle="dark-content" />
       <Icon.Button
         onPress={onGoogleButtonPress}
         name="google"
