@@ -7,6 +7,7 @@ import outComeCategories from '../../configs/outComeCategories';
 import FastImage from 'react-native-fast-image';
 import { saveOutComing } from '../../services/outComming';
 import inComeCategories from '../../configs/inComeCategories';
+import { saveInComing } from '../../services/inComming';
 
 const InOutComeScreen = (props: any) => {
   const [description, setDescription] = useState<string>('');
@@ -20,16 +21,24 @@ const InOutComeScreen = (props: any) => {
     }
     try {
       setIsLoading(true);
-      await saveOutComing({
-        categoryId: outComeCategories[selectedCategory].categoryId,
+      const data = {
+        categoryId:
+          props.route.name === 'OutComeScreen'
+            ? outComeCategories[selectedCategory].categoryId
+            : inComeCategories[selectedCategory].categoryId,
         total: parseInt(total, 10) || 0,
         description,
-      });
+      };
+      if (props.route.name === 'OutComeScreen') {
+        await saveOutComing(data);
+      } else {
+        await saveInComing(data);
+      }
       Alert.alert('Thông báo', 'Lưu thành công');
     } finally {
       setIsLoading(false);
     }
-  }, [selectedCategory, total, description]);
+  }, [selectedCategory, total, description, props.route.name]);
   return (
     <ScrollView
       keyboardShouldPersistTaps="always"

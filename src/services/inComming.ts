@@ -1,18 +1,18 @@
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
-export type OutComing = {
+export type InComing = {
   total: number;
   categoryId: string;
   description: string;
 };
 
-export const saveOutComing = (outComing: OutComing) => {
+export const saveInComing = (inComing: InComing) => {
   return firestore()
-    .collection('outComing')
+    .collection('inComing')
     .doc()
     .set({
-      ...outComing,
+      ...inComing,
       date: new Date(),
       ownerId: auth().currentUser?.uid,
     });
