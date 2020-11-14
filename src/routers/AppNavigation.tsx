@@ -15,6 +15,7 @@ const AppNavigation = () => {
 
   useEffect(() => {
     getTheme().then((theme) => {
+      console.log(theme);
       Appearance.set({ colorScheme: theme });
       setIsLoading(false);
     });

@@ -6,6 +6,7 @@ import {
   View,
   Alert,
   StatusBar,
+  Platform,
 } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import { Text, TextInput, Button } from 'react-native-paper';
@@ -58,7 +59,9 @@ const InOutComeScreen = (props: any) => {
       />
       <ScrollView
         keyboardShouldPersistTaps="always"
-        keyboardDismissMode="interactive"
+        keyboardDismissMode={
+          Platform.OS === 'android' ? 'on-drag' : 'interactive'
+        }
         style={styles.scrollView}>
         <TextInput
           placeholder="Ghi chú"
