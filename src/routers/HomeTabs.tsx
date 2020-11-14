@@ -1,14 +1,29 @@
 import React from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import IncomeScreen from '../screens/tabs/IncomeScreen';
+import InOutComeScreen from '../screens/tabs/InOutComeScreen';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Tab = createMaterialTopTabNavigator();
 
-const HomeTab = () => (
+const HomeTabs = () => (
   <Tab.Navigator>
-    <Tab.Screen name="IncomeScreen" component={IncomeScreen} />
-    <Tab.Screen name="OutcomeScreen" component={IncomeScreen} />
+    <Tab.Screen
+      name="OutComeScreen"
+      options={{
+        title: 'Chi Tiền',
+        tabBarIcon: ({ color }) => <Icon name="home" color={color} size={26} />,
+      }}
+      component={InOutComeScreen}
+    />
+    <Tab.Screen
+      name="InComeScreen"
+      options={{
+        title: 'Thu Tiền',
+        tabBarIcon: ({ color }) => <Icon name="home" color={color} size={26} />,
+      }}
+      component={InOutComeScreen}
+    />
   </Tab.Navigator>
 );
 
-export default HomeTab;
+export default HomeTabs;
