@@ -9,7 +9,6 @@ import { saveOutComing } from '../../services/outComming';
 import inComeCategories from '../../configs/inComeCategories';
 
 const InOutComeScreen = (props: any) => {
-  console.log(props.route.name);
   const [description, setDescription] = useState<string>('');
   const [total, setTotal] = useState<string>('0');
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -32,7 +31,10 @@ const InOutComeScreen = (props: any) => {
     }
   }, [selectedCategory, total, description]);
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      keyboardShouldPersistTaps="always"
+      keyboardDismissMode="interactive"
+      style={styles.container}>
       <TextInput
         placeholder="Ghi chú"
         label="Ghi chú"
