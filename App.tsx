@@ -4,14 +4,20 @@ import { lightTheme, darkTheme } from './src/configs/theme';
 import AppNavigation from './src/routers/AppNavigation';
 // @ts-ignore
 import { AppearanceProvider, useColorScheme } from 'react-native-appearance';
+import { Provider } from 'react-redux';
+import store from './src/services/store';
+import Notify from './src/components/Notify';
 
 const App = () => {
   const scheme = useColorScheme();
   return (
     <AppearanceProvider>
-      <NavigationContainer theme={scheme === 'dark' ? darkTheme : lightTheme}>
-        <AppNavigation />
-      </NavigationContainer>
+      <Provider store={store}>
+        <NavigationContainer theme={scheme === 'dark' ? darkTheme : lightTheme}>
+          <Notify />
+          <AppNavigation />
+        </NavigationContainer>
+      </Provider>
     </AppearanceProvider>
   );
 };

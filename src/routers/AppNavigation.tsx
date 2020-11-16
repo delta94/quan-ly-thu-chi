@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from '../screens/LoginScreen';
 import auth from '@react-native-firebase/auth';
-import MainTabs from './MainTabs';
 import { getTheme } from '../services/theme';
 import { Appearance } from 'react-native-appearance';
+import MainStack from './MainStack';
 
 const Stack = createStackNavigator();
 
@@ -37,7 +37,7 @@ const AppNavigation = () => {
             headerShown: false,
           }}
           name="HomeScreen"
-          component={MainTabs}
+          component={MainStack}
         />
       ) : (
         <Stack.Screen

@@ -1,7 +1,12 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { FlatList, View, StyleSheet, Dimensions } from 'react-native';
+import React, { useMemo } from 'react';
+import {
+  FlatList,
+  View,
+  StyleSheet,
+  Dimensions,
+  Pressable,
+} from 'react-native';
 import { Text } from 'react-native-paper';
-import firestore from '@react-native-firebase/firestore';
 import { useTheme } from '@react-navigation/native';
 import inComeCategories from '../configs/inComeCategories';
 import outComeCategories from '../configs/outComeCategories';
@@ -9,11 +14,20 @@ import FastImage from 'react-native-fast-image';
 import { formatCurrency } from '../commons/format';
 import { groupBy } from '../commons/array';
 import { VictoryPie } from 'victory-native';
+import { useSelector } from 'react-redux';
+import { createSelector } from '@reduxjs/toolkit';
 
 const { width } = Dimensions.get('window');
 
-const History = ({ route }: any) => {
-  const [histories, setHistories] = useState<any[]>([]);
+const moneySelector = (state: any) => state.money;
+
+const inOutComeSelector = (type: string) =>
+  createSelector(moneySelector, (money) =>
+    type === 'InComeHistory' ? money.inComing : money.outComing,
+  );
+
+const History = ({ route, navigation }: any) => {
+  const histories = useSelector(inOutComeSelector(route.name));
   const categories = useMemo(
     () =>
       route.name === 'InComeHistory' ? inComeCategories : outComeCategories,
@@ -39,46 +53,7 @@ const History = ({ route }: any) => {
       };
     });
   }, [categories, historiesByCategory]);
-  useEffect(() => {
-    return firestore()
-      .collection(route.name === 'InComeHistory' ? 'inComing' : 'outComing')
-      .onSnapshot((snapshot) => {
-        snapshot.docChanges().forEach((change) => {
-          if (change.type === 'added') {
-            setHistories((prevHistories) => {
-              if (
-                prevHistories.findIndex((item) => item.id === change.doc.id) ===
-                -1
-              ) {
-                return [
-                  { id: change.doc.id, ...change.doc.data() },
-                  ...prevHistories,
-                ];
-              }
-              return prevHistories;
-            });
-          }
-          if (change.type === 'removed') {
-            setHistories((prevHistories) => {
-              return prevHistories.filter((item) => item.id !== change.doc.id);
-            });
-          }
-          if (change.type === 'modified') {
-            setHistories((prevHistories) => {
-              return prevHistories.map((item) => {
-                if (item.id === change.doc.id) {
-                  return {
-                    ...item,
-                    ...change.doc.data(),
-                  };
-                }
-                return item;
-              });
-            });
-          }
-        });
-      });
-  }, [route.name]);
+
   return (
     <View style={styles.flex1}>
       <View
@@ -101,30 +76,39 @@ const History = ({ route }: any) => {
             (category) => category.categoryId === item,
           )?.icon;
           return (
-            <View
-              style={[
-                styles.container,
-                {
-                  backgroundColor: theme.colors.itemBackground,
-                },
-              ]}>
-              <FastImage style={styles.icon} source={icon} />
-              <View style={styles.infoContainer}>
-                <Text style={styles.title} numberOfLines={1} theme={theme}>
+            <Pressable
+              onPress={() =>
+                navigation.navigate('HistoryList', {
+                  items: historiesByCategory[item],
+                  type: route.name,
+                })
+              }>
+              <View
+                style={[
+                  styles.container,
                   {
-                    categories.find((category) => category.categoryId === item)
-                      ?.name
-                  }
-                </Text>
-                <Text style={styles.total} theme={theme}>
-                  {formatCurrency(
-                    historiesByCategory[item]
-                      .reduce((S: number, i: any) => S + i.total, 0)
-                      .toString(),
-                  )}
-                </Text>
+                    backgroundColor: theme.colors.itemBackground,
+                  },
+                ]}>
+                <FastImage style={styles.icon} source={icon} />
+                <View style={styles.infoContainer}>
+                  <Text style={styles.title} numberOfLines={1} theme={theme}>
+                    {
+                      categories.find(
+                        (category) => category.categoryId === item,
+                      )?.name
+                    }
+                  </Text>
+                  <Text style={styles.total} theme={theme}>
+                    {formatCurrency(
+                      historiesByCategory[item]
+                        .reduce((S: number, i: any) => S + i.total, 0)
+                        .toString(),
+                    )}
+                  </Text>
+                </View>
               </View>
-            </View>
+            </Pressable>
           );
         }}
       />

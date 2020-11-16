@@ -19,6 +19,7 @@ const darkTheme = {
     primary: '#33691E',
     border: '#33691E',
     placeholder: '#33691E',
+    itemBackground: '#000000',
   },
 };
 

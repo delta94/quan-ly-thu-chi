@@ -4,7 +4,6 @@ import {
   Pressable,
   ScrollView,
   View,
-  Alert,
   StatusBar,
   Platform,
 } from 'react-native';
@@ -17,19 +16,31 @@ import { saveOutComing } from '../../services/outComming';
 import inComeCategories from '../../configs/inComeCategories';
 import { saveInComing } from '../../services/inComming';
 import { formatCurrency, removeComas } from '../../commons/format';
+import { useDispatch } from 'react-redux';
+import { error, success } from '../../services/actions/notify';
+import DatePicker from '../../components/DatePicker';
 
 const InOutComeScreen = (props: any) => {
   const [description, setDescription] = useState<string>('');
+  const [date, setDate] = useState<Date | undefined>(new Date());
   const [total, setTotal] = useState<string>('0');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedCategory, setSelectedCategory] = useState<number>(-1);
   const theme = useTheme();
+  const dispatch = useDispatch();
   const onChangeTotal = useCallback((value: string) => {
     setTotal((parseInt(removeComas(value), 10) || 0).toString());
   }, []);
   const onPressSave = useCallback(async () => {
     if (selectedCategory === -1) {
-      return Alert.alert('Lẩu rầu', 'Vui lòng chọn danh mục');
+      return dispatch(
+        error({ title: 'Lỗi', description: 'Vui lòng chọn danh mục' }),
+      );
+    }
+    if (!total || total === '0') {
+      return dispatch(
+        error({ title: 'Lỗi', description: 'Vui lòng nhập số tiền' }),
+      );
     }
     try {
       setIsLoading(true);
@@ -39,6 +50,7 @@ const InOutComeScreen = (props: any) => {
             ? outComeCategories[selectedCategory].categoryId
             : inComeCategories[selectedCategory].categoryId,
         total: parseInt(total, 10) || 0,
+        date: date || new Date(),
         description,
       };
       if (props.route.name === 'OutComeScreen') {
@@ -46,11 +58,11 @@ const InOutComeScreen = (props: any) => {
       } else {
         await saveInComing(data);
       }
-      Alert.alert('Thông báo', 'Lưu thành công');
+      dispatch(success({ title: 'Thông báo', description: 'Lưu thành công' }));
     } finally {
       setIsLoading(false);
     }
-  }, [selectedCategory, total, description, props.route.name]);
+  }, [date, selectedCategory, props.route.name, total, description, dispatch]);
   return (
     <View style={styles.container}>
       <StatusBar
@@ -63,6 +75,7 @@ const InOutComeScreen = (props: any) => {
           Platform.OS === 'android' ? 'on-drag' : 'interactive'
         }
         style={styles.scrollView}>
+        <DatePicker date={date} setDate={setDate} />
         <TextInput
           placeholder="Ghi chú"
           label="Ghi chú"
