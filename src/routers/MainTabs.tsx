@@ -44,7 +44,7 @@ const MainTabs = () => {
       .where('date', '>', start)
       .onSnapshot((snapshot) => {
         if (!snapshot) {
-          return;
+          return dispatch(setLoading(false));
         }
         snapshot.docChanges().forEach((change) => {
           if (change.type === 'added') {
@@ -69,7 +69,7 @@ const MainTabs = () => {
       .where('date', '>', start)
       .onSnapshot((snapshot) => {
         if (!snapshot) {
-          return;
+          return dispatch(setLoading(false));
         }
         snapshot.docChanges().forEach((change) => {
           if (change.type === 'added') {
