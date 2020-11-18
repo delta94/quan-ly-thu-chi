@@ -40,51 +40,55 @@ const ReportScreen = () => {
       <Appbar.Header theme={theme}>
         <Appbar.Content title="Tình hình thu chi" />
       </Appbar.Header>
-      <ScrollView style={styles.scollView}>
-        <View
+      <View
+        style={[
+          styles.selectDateRange,
+          {
+            backgroundColor: theme.colors.border,
+          },
+        ]}>
+        <Pressable
+          onPress={setReportType0}
           style={[
-            styles.selectDateRange,
+            styles.selectDateRangeButton,
+            styles.border1,
             {
-              backgroundColor: theme.colors.border,
+              backgroundColor:
+                history.reportType !== 0 ? theme.colors.primary : '#FFF',
             },
           ]}>
-          <Pressable
-            onPress={setReportType0}
-            style={[
-              styles.selectDateRangeButton,
-              styles.border1,
-              {
-                backgroundColor:
-                  history.reportType !== 0
-                    ? theme.colors.primary
-                    : theme.colors.itemBackground,
-              },
-            ]}>
-            <Text
-              style={history.reportType !== 0 ? { color: '#FFF' } : {}}
-              theme={theme}>
-              7 ngày
-            </Text>
-          </Pressable>
-          <Pressable
-            onPress={setReportType1}
-            style={[
-              styles.selectDateRangeButton,
-              styles.border2,
-              {
-                backgroundColor:
-                  history.reportType !== 1
-                    ? theme.colors.primary
-                    : theme.colors.itemBackground,
-              },
-            ]}>
-            <Text
-              style={history.reportType !== 1 ? { color: '#FFF' } : {}}
-              theme={theme}>
-              30 ngày
-            </Text>
-          </Pressable>
-        </View>
+          <Text
+            style={
+              history.reportType !== 0
+                ? { color: '#FFF' }
+                : { color: theme.colors.primary }
+            }
+            theme={theme}>
+            7 ngày
+          </Text>
+        </Pressable>
+        <Pressable
+          onPress={setReportType1}
+          style={[
+            styles.selectDateRangeButton,
+            styles.border2,
+            {
+              backgroundColor:
+                history.reportType !== 1 ? theme.colors.primary : '#FFF',
+            },
+          ]}>
+          <Text
+            style={
+              history.reportType !== 1
+                ? { color: '#FFF' }
+                : { color: theme.colors.primary }
+            }
+            theme={theme}>
+            30 ngày
+          </Text>
+        </Pressable>
+      </View>
+      <ScrollView style={styles.scollView}>
         <View
           style={[
             styles.totalContainer,
@@ -172,6 +176,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 25,
     alignItems: 'center',
+    marginTop: 1,
   },
   border1: {
     borderTopLeftRadius: 10,

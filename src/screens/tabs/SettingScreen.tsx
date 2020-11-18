@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Appbar, Avatar, Switch, Text } from 'react-native-paper';
 // @ts-ignore
-import { Appearance } from 'react-native-appearance';
+import { Appearance, useColorScheme } from 'react-native-appearance';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useTheme } from '@react-navigation/native';
 import avatar from '../../assets/icons/avatar.jpg';
 import auth from '@react-native-firebase/auth';
+import { setTheme } from '../../services/theme';
 
 const SettingScreen = () => {
-  const [isDarkMode, setDarkMode] = useState(false);
+  const scheme = useColorScheme();
+  const [isDarkMode, setDarkMode] = useState(scheme === 'dark');
   const theme: any = useTheme();
   const onToggleSwitch = () => {
     setDarkMode((prevDarkMode) => !prevDarkMode);
@@ -16,6 +18,9 @@ const SettingScreen = () => {
 
   useEffect(() => {
     Appearance.set({ colorScheme: isDarkMode ? 'dark' : 'light' });
+    setTheme(isDarkMode ? 'dark' : 'light').then(() =>
+      console.log('Theme set successfully'),
+    );
   }, [isDarkMode]);
 
   return (
