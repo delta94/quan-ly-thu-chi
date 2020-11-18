@@ -1,11 +1,13 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useTheme } from '@react-navigation/native';
-import { StyleSheet, View, ScrollView } from 'react-native';
+import { StyleSheet, View, ScrollView, Pressable } from 'react-native';
 import { Appbar, Text } from 'react-native-paper';
 import HistoryTabs from '../../routers/HistoryTabs';
 import { createSelector } from '@reduxjs/toolkit';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { formatCurrency } from '../../commons/format';
+import { setReportType } from '../../services/actions/money';
+import Loading from '../../components/Loading';
 
 const moneySelector = (state: any) => state.money;
 
@@ -14,6 +16,7 @@ const inOutComeSelector = createSelector(moneySelector, (money) => money);
 const ReportScreen = () => {
   const history = useSelector(inOutComeSelector);
   const theme: any = useTheme();
+  const dispatch = useDispatch();
   const totalInCome = useMemo(() => {
     return history.inComing.reduce((S: number, item: any) => S + item.total, 0);
   }, [history.inComing]);
@@ -24,12 +27,64 @@ const ReportScreen = () => {
     );
   }, [history.outComing]);
 
+  const setReportType0 = useCallback(() => {
+    dispatch(setReportType(0));
+  }, [dispatch]);
+
+  const setReportType1 = useCallback(() => {
+    dispatch(setReportType(1));
+  }, [dispatch]);
+
   return (
     <View style={styles.container}>
       <Appbar.Header theme={theme}>
         <Appbar.Content title="Tình hình thu chi" />
       </Appbar.Header>
       <ScrollView style={styles.scollView}>
+        <View
+          style={[
+            styles.selectDateRange,
+            {
+              backgroundColor: theme.colors.border,
+            },
+          ]}>
+          <Pressable
+            onPress={setReportType0}
+            style={[
+              styles.selectDateRangeButton,
+              styles.border1,
+              {
+                backgroundColor:
+                  history.reportType !== 0
+                    ? theme.colors.primary
+                    : theme.colors.itemBackground,
+              },
+            ]}>
+            <Text
+              style={history.reportType !== 0 ? { color: '#FFF' } : {}}
+              theme={theme}>
+              7 ngày
+            </Text>
+          </Pressable>
+          <Pressable
+            onPress={setReportType1}
+            style={[
+              styles.selectDateRangeButton,
+              styles.border2,
+              {
+                backgroundColor:
+                  history.reportType !== 1
+                    ? theme.colors.primary
+                    : theme.colors.itemBackground,
+              },
+            ]}>
+            <Text
+              style={history.reportType !== 1 ? { color: '#FFF' } : {}}
+              theme={theme}>
+              30 ngày
+            </Text>
+          </Pressable>
+        </View>
         <View
           style={[
             styles.totalContainer,
@@ -76,6 +131,7 @@ const ReportScreen = () => {
         </View>
         <HistoryTabs />
       </ScrollView>
+      <Loading isLoading={history.isLoading} />
     </View>
   );
 };
@@ -105,6 +161,31 @@ const styles = StyleSheet.create({
   },
   scollView: {
     marginTop: 1,
+  },
+  selectDateRange: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    padding: 10,
+  },
+  selectDateRangeButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 25,
+    alignItems: 'center',
+  },
+  border1: {
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
+    borderWidth: 1,
+    borderRightWidth: 0,
+    borderColor: '#FFF',
+  },
+  border2: {
+    borderTopRightRadius: 10,
+    borderBottomRightRadius: 10,
+    borderWidth: 1,
+    borderLeftWidth: 0,
+    borderColor: '#FFF',
   },
 });
 export default ReportScreen;

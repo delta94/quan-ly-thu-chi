@@ -7,6 +7,7 @@ import { Appearance } from 'react-native-appearance';
 import MainStack from './MainStack';
 import { useDispatch } from 'react-redux';
 import { resetStore } from '../services/actions/reset';
+import RNBootSplash from 'react-native-bootsplash';
 
 const Stack = createStackNavigator();
 
@@ -22,6 +23,7 @@ const AppNavigation = () => {
       setIsLoading(false);
     });
     return auth().onAuthStateChanged((user) => {
+      console.log(user);
       setSignedIn(!!user);
       if (!isLoading && checkSignedIn && !user) {
         dispatch(resetStore());
@@ -29,6 +31,12 @@ const AppNavigation = () => {
       setCheckSignedIn(true);
     });
   }, [checkSignedIn, dispatch, isLoading]);
+
+  useEffect(() => {
+    RNBootSplash.hide({ fade: true }).then(() => {
+      console.log('SplashScreen hide complete');
+    });
+  }, []);
 
   if (!checkSignedIn || isLoading) {
     return null;

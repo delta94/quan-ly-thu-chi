@@ -5,3 +5,9 @@ export const resetStore = createAction('STORE/RESET', () => {
     payload: null,
   };
 });
+
+export const setLoading = createAction('APP/LOADING', (payload: boolean) => {
+  return {
+    payload,
+  };
+});

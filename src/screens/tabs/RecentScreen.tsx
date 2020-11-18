@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { SectionList, StyleSheet, View } from 'react-native';
+import React, { useCallback, useMemo } from 'react';
+import { Pressable, SectionList, StyleSheet, View } from 'react-native';
 import { Appbar, Text } from 'react-native-paper';
 import { useTheme } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
@@ -8,16 +8,19 @@ import inComeCategories from '../../configs/inComeCategories';
 import outComeCategories from '../../configs/outComeCategories';
 import moment from 'moment';
 import { createSelector } from '@reduxjs/toolkit';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { deepCopyArray, groupBy } from '../../commons/array';
 import LinearGradient from 'react-native-linear-gradient';
-import Empty from "../../components/Empty";
+import Empty from '../../components/Empty';
+import Loading from '../../components/Loading';
+import { setReportType } from '../../services/actions/money';
 
 const moneySelector = (state: any) => state.money;
 
 const inOutComeSelector = createSelector(moneySelector, (money) => money);
 
 const RecentScreen = () => {
+  const dispatch = useDispatch();
   const theme: any = useTheme();
   const categories = useMemo(
     () => [...inComeCategories, ...outComeCategories],
@@ -47,11 +50,66 @@ const RecentScreen = () => {
         moment(b.title, 'DD/MM/YYYY').diff(moment(a.title, 'DD/MM/YYYY')),
       );
   }, [history.inComing, history.outComing]);
+  const setReportType0 = useCallback(() => {
+    dispatch(setReportType(0));
+  }, [dispatch]);
+
+  const setReportType1 = useCallback(() => {
+    dispatch(setReportType(1));
+  }, [dispatch]);
   return (
     <View style={styles.container}>
       <Appbar.Header theme={theme}>
         <Appbar.Content title="Ghi chép" />
       </Appbar.Header>
+      <View
+        style={[
+          styles.selectDateRange,
+          {
+            backgroundColor: theme.colors.border,
+          },
+        ]}>
+        <Pressable
+          onPress={setReportType0}
+          style={[
+            styles.selectDateRangeButton,
+            styles.border1,
+            {
+              backgroundColor:
+                history.reportType !== 0 ? theme.colors.primary : '#FFF',
+            },
+          ]}>
+          <Text
+            style={
+              history.reportType !== 0
+                ? { color: '#FFF' }
+                : { color: theme.colors.primary }
+            }
+            theme={theme}>
+            7 ngày
+          </Text>
+        </Pressable>
+        <Pressable
+          onPress={setReportType1}
+          style={[
+            styles.selectDateRangeButton,
+            styles.border2,
+            {
+              backgroundColor:
+                history.reportType !== 1 ? theme.colors.primary : '#FFF',
+            },
+          ]}>
+          <Text
+            style={
+              history.reportType !== 1
+                ? { color: '#FFF' }
+                : { color: theme.colors.primary }
+            }
+            theme={theme}>
+            30 ngày
+          </Text>
+        </Pressable>
+      </View>
       <SectionList
         style={styles.section}
         sections={getHistories}
@@ -130,6 +188,7 @@ const RecentScreen = () => {
           );
         }}
       />
+      <Loading isLoading={history.isLoading} />
     </View>
   );
 };
@@ -188,6 +247,32 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 1,
+  },
+  selectDateRange: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    padding: 10,
+    marginTop: 1,
+  },
+  selectDateRangeButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 25,
+    alignItems: 'center',
+  },
+  border1: {
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
+    borderWidth: 1,
+    borderRightWidth: 0,
+    borderColor: '#FFF',
+  },
+  border2: {
+    borderTopRightRadius: 10,
+    borderBottomRightRadius: 10,
+    borderWidth: 1,
+    borderLeftWidth: 0,
+    borderColor: '#FFF',
   },
 });
 

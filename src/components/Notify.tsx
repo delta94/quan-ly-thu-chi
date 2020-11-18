@@ -21,7 +21,7 @@ const NotifyItem = ({ notify }: any) => {
     if (!isVisible) {
       setTimeout(() => {
         dispatch(remove(notify.id));
-      }, 500);
+      }, 550);
     }
   }, [dispatch, isVisible, notify.id]);
   return (

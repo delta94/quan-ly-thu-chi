@@ -62,7 +62,9 @@ const SettingScreen = () => {
           Tài khoản
         </Text>
         <Pressable onPress={() => auth().signOut()}>
-          <Text theme={theme} style={styles.menuTitle}>
+          <Text
+            theme={theme}
+            style={[styles.menuTitle, { color: theme.colors.accent }]}>
             Đăng xuất
           </Text>
         </Pressable>

@@ -4,19 +4,24 @@ import {
   addOutComming,
   deleteInComming,
   deleteOutComming,
+  setReportType,
   updateInComming,
   updateOutComming,
 } from '../actions/money';
-import {resetStore} from "../actions/reset";
+import { resetStore, setLoading } from '../actions/reset';
 
 type MoneyReducer = {
   inComing: any[];
   outComing: any[];
+  reportType: 0 | 1;
+  isLoading: boolean;
 };
 
 const initMoneyState: MoneyReducer = {
   inComing: [],
   outComing: [],
+  reportType: 0,
+  isLoading: false,
 };
 
 const moneyReducer = createReducer(initMoneyState, (builder) => {
@@ -59,7 +64,18 @@ const moneyReducer = createReducer(initMoneyState, (builder) => {
         (item) => item.id !== action.payload.id,
       );
     })
-    .addCase(resetStore, () => initMoneyState);
+    .addCase(setReportType, (state, action) => {
+      state.reportType = action.payload;
+    })
+    .addCase(setLoading, (state, action) => ({
+      ...state,
+      isLoading: action.payload,
+    }))
+    .addCase(resetStore, (state) => ({
+      ...state,
+      inComing: [],
+      outComing: [],
+    }));
 });
 
 export default moneyReducer;

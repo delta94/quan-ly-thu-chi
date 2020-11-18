@@ -1,5 +1,11 @@
 import { createAction } from '@reduxjs/toolkit';
 
+export const setReportType = createAction('REPORT/SET_TYPE', (payload) => {
+  return {
+    payload,
+  };
+});
+
 export const addInComming = createAction('INCOMING/ADD', (payload) => {
   return {
     payload: {
