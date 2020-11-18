@@ -6,6 +6,7 @@ import SettingScreen from '../screens/tabs/SettingScreen';
 import ReportScreen from '../screens/tabs/ReportScreen';
 import { useDispatch } from 'react-redux';
 import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
 import {
   addInComming,
   addOutComming,
@@ -14,6 +15,7 @@ import {
   updateInComming,
   updateOutComming,
 } from '../services/actions/money';
+import RecentScreen from '../screens/tabs/RecentScreen';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -22,6 +24,7 @@ const MainTabs = () => {
   useEffect(() => {
     const removeListenerInComming = firestore()
       .collection('inComing')
+      .where('ownerId', '==', auth().currentUser?.uid)
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === 'added') {
@@ -41,6 +44,7 @@ const MainTabs = () => {
       });
     const removeListenerOutComming = firestore()
       .collection('outComing')
+      .where('ownerId', '==', auth().currentUser?.uid)
       .onSnapshot((snapshot) => {
         snapshot.docChanges().forEach((change) => {
           if (change.type === 'added') {
@@ -74,6 +78,16 @@ const MainTabs = () => {
           tabBarLabel: 'Trang chủ',
           tabBarIcon: ({ color }) => (
             <Icon name="home" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="RecentTab"
+        component={RecentScreen}
+        options={{
+          tabBarLabel: 'Ghi chép',
+          tabBarIcon: ({ color }) => (
+            <Icon name="history" color={color} size={26} />
           ),
         }}
       />

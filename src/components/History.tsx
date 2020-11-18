@@ -57,24 +57,46 @@ const History = ({ route, navigation }: any) => {
   return (
     <View style={styles.flex1}>
       <View
-        style={{
-          backgroundColor: theme.colors.itemBackground,
-          marginBottom: 1,
-        }}>
+        style={[
+          styles.rowCenter,
+          {
+            backgroundColor: theme.colors.itemBackground,
+            marginBottom: 1,
+          },
+        ]}>
         <VictoryPie
           colorScale={chartData.map((item) => item.color)}
           data={chartData}
-          width={(width * 2) / 3}
-          height={(width * 2) / 3}
+          width={(width * 3) / 5}
+          height={(width * 3) / 5}
+          padding={{ left: 30, right: 30, top: 30, bottom: 30 }}
+        />
+        <FlatList
+          data={Object.keys(historiesByCategory)}
+          keyExtractor={(item) => item}
+          renderItem={({ item }) => {
+            const category = categories.find((c) => c.categoryId === item);
+            return (
+              <View style={styles.rowCenter}>
+                <View
+                  style={[
+                    styles.dot,
+                    {
+                      backgroundColor: category?.code,
+                    },
+                  ]}
+                />
+                <Text theme={theme}>{category?.name}</Text>
+              </View>
+            );
+          }}
         />
       </View>
       <FlatList
         data={Object.keys(historiesByCategory)}
         keyExtractor={(item) => item}
         renderItem={({ item }) => {
-          const icon = categories.find(
-            (category) => category.categoryId === item,
-          )?.icon;
+          const category = categories.find((c) => c.categoryId === item);
           return (
             <Pressable
               onPress={() =>
@@ -90,22 +112,33 @@ const History = ({ route, navigation }: any) => {
                     backgroundColor: theme.colors.itemBackground,
                   },
                 ]}>
-                <FastImage style={styles.icon} source={icon} />
+                <FastImage style={styles.icon} source={category?.icon} />
                 <View style={styles.infoContainer}>
-                  <Text style={styles.title} numberOfLines={1} theme={theme}>
-                    {
-                      categories.find(
-                        (category) => category.categoryId === item,
-                      )?.name
-                    }
-                  </Text>
-                  <Text style={styles.total} theme={theme}>
-                    {formatCurrency(
-                      historiesByCategory[item]
-                        .reduce((S: number, i: any) => S + i.total, 0)
-                        .toString(),
-                    )}
-                  </Text>
+                  <View style={styles.rowCenterSB}>
+                    <Text style={styles.title} numberOfLines={1} theme={theme}>
+                      {category?.name}
+                    </Text>
+                    <View
+                      style={[
+                        styles.dot2,
+                        {
+                          backgroundColor: category?.code,
+                        },
+                      ]}
+                    />
+                  </View>
+                  <View style={styles.rowCenterSB}>
+                    <Text style={styles.total} theme={theme}>
+                      {formatCurrency(
+                        historiesByCategory[item]
+                          .reduce((S: number, i: any) => S + i.total, 0)
+                          .toString(),
+                      )}
+                    </Text>
+                    <Text style={styles.title} numberOfLines={1} theme={theme}>
+                      {historiesByCategory[item].length} ghi chép
+                    </Text>
+                  </View>
                 </View>
               </View>
             </Pressable>
@@ -140,6 +173,29 @@ const styles = StyleSheet.create({
     width: 24,
     marginRight: 15,
     marginLeft: 5,
+  },
+  dot: {
+    height: 24,
+    width: 24,
+    borderRadius: 12,
+    marginVertical: 5,
+    marginRight: 5,
+  },
+  dot2: {
+    height: 18,
+    width: 18,
+    borderRadius: 9,
+    marginVertical: 5,
+    marginRight: 5,
+  },
+  rowCenter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  rowCenterSB: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });
 

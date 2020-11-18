@@ -1,23 +1,55 @@
-import React from 'react';
-import {View, StyleSheet, StatusBar} from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { View, StyleSheet, StatusBar } from 'react-native';
 import { useTheme } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/FontAwesome5';
 import { onGoogleButtonPress } from '../services/auth';
+import { Button } from 'react-native-paper';
+import { useColorScheme } from 'react-native-appearance';
+import { useDispatch } from 'react-redux';
+import { success } from '../services/actions/notify';
 
 const LoginScreen = () => {
   const theme = useTheme();
+  const scheme = useColorScheme();
+  const dispatch = useDispatch();
+  const [isLoadingGoogle, setIsLoadingGoogle] = useState(false);
+  const signInWithGoogle = useCallback(async () => {
+    setIsLoadingGoogle(true);
+    try {
+      await onGoogleButtonPress();
+    } catch {
+    } finally {
+      setIsLoadingGoogle(false);
+    }
+  }, []);
+  const signInWithApple = useCallback(() => {
+    dispatch(
+      success({
+        title: 'Thông báo',
+        description: 'Chức năng này đang hoàn thiện',
+      }),
+    );
+  }, []);
   return (
     <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <StatusBar barStyle="dark-content" />
-      <Icon.Button
-        onPress={onGoogleButtonPress}
-        name="google"
-        color="#000"
-        backgroundColor="#CECECE"
-        style={styles.button}>
+      <StatusBar
+        barStyle={scheme === 'dark' ? 'light-content' : 'dark-content'}
+      />
+      <Button
+        style={styles.button}
+        onPress={signInWithApple}
+        icon="apple"
+        theme={theme}>
+        Đăng nhập bằng Apple
+      </Button>
+      <Button
+        loading={isLoadingGoogle}
+        style={styles.button}
+        onPress={signInWithGoogle}
+        icon="google"
+        theme={theme}>
         Đăng nhập bằng Google
-      </Icon.Button>
+      </Button>
     </View>
   );
 };
@@ -29,8 +61,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   button: {
-    paddingVertical: 12,
-    paddingHorizontal: 30,
+    paddingVertical: 7,
+    paddingHorizontal: 20,
+    backgroundColor: '#CCC',
+    marginVertical: 5,
   },
 });
 

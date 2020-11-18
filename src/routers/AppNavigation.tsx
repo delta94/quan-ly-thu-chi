@@ -5,6 +5,8 @@ import auth from '@react-native-firebase/auth';
 import { getTheme } from '../services/theme';
 import { Appearance } from 'react-native-appearance';
 import MainStack from './MainStack';
+import { useDispatch } from 'react-redux';
+import { resetStore } from '../services/actions/reset';
 
 const Stack = createStackNavigator();
 
@@ -12,7 +14,7 @@ const AppNavigation = () => {
   const [isSignedIn, setSignedIn] = useState(false);
   const [checkSignedIn, setCheckSignedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
+  const dispatch = useDispatch();
   useEffect(() => {
     getTheme().then((theme) => {
       console.log(theme);
@@ -21,9 +23,12 @@ const AppNavigation = () => {
     });
     return auth().onAuthStateChanged((user) => {
       setSignedIn(!!user);
+      if (!isLoading && checkSignedIn && !user) {
+        dispatch(resetStore());
+      }
       setCheckSignedIn(true);
     });
-  }, []);
+  }, [checkSignedIn, dispatch, isLoading]);
 
   if (!checkSignedIn || isLoading) {
     return null;

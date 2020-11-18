@@ -29,7 +29,7 @@ const ReportScreen = () => {
       <Appbar.Header theme={theme}>
         <Appbar.Content title="Tình hình thu chi" />
       </Appbar.Header>
-      <ScrollView>
+      <ScrollView style={styles.scollView}>
         <View
           style={[
             styles.totalContainer,
@@ -102,6 +102,9 @@ const styles = StyleSheet.create({
   },
   total: {
     fontSize: 18,
+  },
+  scollView: {
+    marginTop: 1,
   },
 });
 export default ReportScreen;

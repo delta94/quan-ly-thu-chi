@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { createSelector } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
-import { StyleSheet, View } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import Modal from 'react-native-modal';
 import { Button, Text } from 'react-native-paper';
 import { useTheme } from '@react-navigation/native';
 import { remove } from '../services/actions/notify';
+
+const { width } = Dimensions.get('window');
 
 const selectNotify = (state: any) => state.notify;
 
@@ -73,7 +75,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 10,
   },
   title: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
     alignSelf: 'center',
     color: '#FFF',
@@ -82,12 +84,13 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   description: {
-    fontSize: 20,
+    fontSize: 16,
     alignSelf: 'center',
   },
   notifyContainer: {
     backgroundColor: '#FFF',
     borderRadius: 10,
+    width: width - 100,
   },
   button: {
     borderTopWidth: 1,

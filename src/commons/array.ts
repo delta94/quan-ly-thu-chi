@@ -7,4 +7,6 @@ const groupBy = (items: any[], key: string) =>
     {},
   );
 
-export { groupBy };
+const deepCopyArray = (array: any[]) => JSON.parse(JSON.stringify(array));
+
+export { groupBy, deepCopyArray };

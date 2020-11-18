@@ -26,7 +26,7 @@ const InOutComeScreen = (props: any) => {
   const [total, setTotal] = useState<string>('0');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedCategory, setSelectedCategory] = useState<number>(-1);
-  const theme = useTheme();
+  const theme: any = useTheme();
   const dispatch = useDispatch();
   const onChangeTotal = useCallback((value: string) => {
     setTotal((parseInt(removeComas(value), 10) || 0).toString());
@@ -58,6 +58,8 @@ const InOutComeScreen = (props: any) => {
       } else {
         await saveInComing(data);
       }
+      setDescription('');
+      setTotal('0');
       dispatch(success({ title: 'Thông báo', description: 'Lưu thành công' }));
     } finally {
       setIsLoading(false);
@@ -131,7 +133,7 @@ const InOutComeScreen = (props: any) => {
         <Button
           icon="plus"
           mode="contained"
-          style={styles.button}
+          style={[styles.button, { backgroundColor: theme.colors.accent}]}
           disabled={isLoading}
           loading={isLoading}
           onPress={onPressSave}>

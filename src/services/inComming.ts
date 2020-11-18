@@ -14,6 +14,7 @@ export const saveInComing = (inComing: InComing) => {
     .doc()
     .set({
       ...inComing,
+      createdAt: new Date(),
       ownerId: auth().currentUser?.uid,
     });
 };

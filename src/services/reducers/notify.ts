@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { error, remove, success } from '../actions/notify';
-import { generateID } from '../../commons/method';
+import { resetStore } from '../actions/reset';
 
 const initNotifyState: any[] = [];
 
@@ -14,7 +14,8 @@ const notifyReducer = createReducer(initNotifyState, (builder) => {
     })
     .addCase(remove, (state, action) => {
       return state.filter((item) => item.id !== action.payload.id);
-    });
+    })
+    .addCase(resetStore, () => initNotifyState);
 });
 
 export default notifyReducer;

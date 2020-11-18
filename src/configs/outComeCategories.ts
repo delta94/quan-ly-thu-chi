@@ -2,7 +2,7 @@ const outComeCategories = [
   {
     categoryId: 'an-uong',
     name: 'Ăn uống',
-    code: '#000000',
+    code: 'tomato',
     icon: require('../assets/icons/anuon.png'),
   },
   {
@@ -14,13 +14,13 @@ const outComeCategories = [
   {
     categoryId: 'my-pham',
     name: 'Mỹ phẩm',
-    code: '#3498db',
+    code: 'orange',
     icon: require('../assets/icons/cosmetics.png'),
   },
   {
     categoryId: 'y-te',
     name: 'Y tế',
-    code: '#9b59b6',
+    code: 'gold',
     icon: require('../assets/icons/healthcare.png'),
   },
   {
@@ -50,7 +50,7 @@ const outComeCategories = [
   {
     categoryId: 'giao-duc',
     name: 'Giáo dục',
-    code: '#8e44ad',
+    code: 'navy',
     icon: require('../assets/icons/graduation-hat.png'),
   },
 ];

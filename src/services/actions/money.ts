@@ -2,7 +2,10 @@ import { createAction } from '@reduxjs/toolkit';
 
 export const addInComming = createAction('INCOMING/ADD', (payload) => {
   return {
-    payload,
+    payload: {
+      ...payload,
+      incoming: true,
+    },
   };
 });
 
@@ -20,7 +23,10 @@ export const deleteInComming = createAction('INCOMING/DELETE', (payload) => {
 
 export const addOutComming = createAction('OUTCOMING/ADD', (payload) => {
   return {
-    payload,
+    payload: {
+      ...payload,
+      incoming: false,
+    },
   };
 });
 

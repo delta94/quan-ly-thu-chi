@@ -6,6 +6,7 @@ import FastImage from 'react-native-fast-image';
 import { formatCurrency } from '../commons/format';
 import inComeCategories from '../configs/inComeCategories';
 import outComeCategories from '../configs/outComeCategories';
+import moment from 'moment';
 
 const HistoryList = ({ route, navigation }: any) => {
   const theme: any = useTheme();
@@ -43,9 +44,14 @@ const HistoryList = ({ route, navigation }: any) => {
                   <Text style={styles.title} numberOfLines={1} theme={theme}>
                     {item.description || 'Không có mô tả'}
                   </Text>
+                  <Text style={styles.date} numberOfLines={1} theme={theme}>
+                    {moment(
+                      (item.date && item.date.seconds * 1000) || new Date(),
+                    ).format('DD/MM/YYYY')}
+                  </Text>
                 </View>
                 <Text style={styles.total} theme={theme}>
-                  {formatCurrency(item.total.toString())}
+                  {formatCurrency(item.total.toString())} đ
                 </Text>
               </View>
             </View>
@@ -68,9 +74,14 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
+    flex: 1,
+  },
+  date: {
+    fontSize: 16,
   },
   total: {
     fontSize: 16,
+    fontWeight: 'bold',
   },
   icon: {
     height: 24,

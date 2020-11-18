@@ -9,6 +9,8 @@ const lightTheme = {
     placeholder: '#7e3ff2',
     background: '#eee',
     itemBackground: '#ffffff',
+    gradient: ['#ffffff', '#eeeeee'],
+    accent: '#7e3ff2',
   },
 };
 
@@ -16,10 +18,13 @@ const darkTheme = {
   ...DarkTheme,
   colors: {
     ...DarkTheme.colors,
-    primary: '#33691E',
-    border: '#33691E',
-    placeholder: '#33691E',
-    itemBackground: '#000000',
+    primary: '#222222',
+    border: '#222222',
+    placeholder: '#222222',
+    itemBackground: '#222222',
+    gradient: ['#222222', '#131313'],
+    background: '#000000',
+    accent: '#513680',
   },
 };
 

@@ -7,6 +7,7 @@ import {
   updateInComming,
   updateOutComming,
 } from '../actions/money';
+import {resetStore} from "../actions/reset";
 
 type MoneyReducer = {
   inComing: any[];
@@ -57,7 +58,8 @@ const moneyReducer = createReducer(initMoneyState, (builder) => {
       state.outComing = state.outComing.filter(
         (item) => item.id !== action.payload.id,
       );
-    });
+    })
+    .addCase(resetStore, () => initMoneyState);
 });
 
 export default moneyReducer;
